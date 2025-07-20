@@ -355,24 +355,3 @@ mapview(dt, xcol = "Longitude", ycol = "Latitude", crs = 4269,
 
 
 
-
-## RILEVAMENTO DI COMUNITÀ
-# c = cluster_leading_eigen(graph)
-# modularity(c)
-# 
-# length(c)
-# 
-# sizes(c)
-# 
-# membership(c)
-# 
-# crossing(c, graph)
-# 
-# plot(c, graph, layout = lo)
-# 
-# plot(graph, vertex.color = membership(c), layout = lo)
-
-
-
-
-

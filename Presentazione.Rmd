@@ -177,7 +177,7 @@ legend(x = "topright",
 
 Analizzando i cammini minimi tra le coppie di nodi possiamo notare che risulta essere piuttosto breve se paragonata al numero di nodi dell'intera rete. Infatti la lunghezza dei cammini minimi è in media 16.91. Questo valore messo a confronto con il numero di nodi della rete suggerisce un effetto small-world sulla rete.
 
-Il grafico invece mostra come si distribuiscono le lunghezze dei cammini minimi attorno alla distanza media. Si può notare che si ottiene una distribuzione asimmetrica positiva in quanto il valore più ricorrente, la moda, ovvero il picco più alto nel grafico, è vicino a 14 ed è minore del valore della media. Possiamo quindi dire che la maggior parte dei cammini minimi ha una lunghezza relativamente breve (considerando il numero di nodi della rete), ma ci sono alcuni casi con distanze piuttosto lunghe. La presenza della coda verso destra indica che ci sono dei cammini che collegano delle zone periferiche che quindi hanno una connettività minore rispetto alle zone più centrali. Ciò può essere confermato analizzando la distribuzione dei gradi dei nodi tra le varie zone di appartenenza delle stazioni.
+Il grafico invece mostra come si distribuiscono le lunghezze dei cammini minimi attorno alla distanza media. Si può notare che si ottiene una distribuzione asimmetrica positiva in quanto il valore più ricorrente, la moda, ovvero il picco più alto nel grafico, è vicino a 14 ed è minore del valore della media. Possiamo quindi dire che la maggior parte dei cammini minimi ha una lunghezza relativamente breve (considerando il numero di nodi della rete), ma ci sono alcuni casi con distanze piuttosto lunghe. La presenza della coda verso destra indica che ci sono delle stazioni meno connesse al resto della rete e che probabilmente si trovano in delle zone più periferiche della rete.
 
 ```{r, echo=F}
 distanza_media = mean_distance(graph)
@@ -206,7 +206,9 @@ legend("topright",
 
 
 ### DISTRANZA GEODETICA
+
 Questo grafo evidenzia il diametro della rete, ovvero il cammino minimo più lungo, evidenziando in blu il nodo di partenza e in verde il nodo terminale. Quindi un passeggero che parte dalla stazione di "Dundonald Road" e deve raggiungere quella di "Hatton Cross" dovrà fermarsi in ben 53 stazioni prima di raggiungere la meta.
+
 ```{r, echo=F}
 diameter(graph, directed = T) # Il cammino minimo maggiore è lungo 54
 
@@ -242,8 +244,8 @@ mapview(stazioni_diametro, xcol = "Longitude", ycol = "Latitude", crs = 4269)
 ## DISTRIBUZIONE DEI GRADI
 Analizzando il grado dei nodi della rete otteniamo che il grado medio è circa 3. Analizzando il grafico della distribuzione dei gradi si nota che la maggior parte dei nodi ha grado 2 e poi ci sono pochi nodi con grado alto. Questi pochi nodi con grado alto quindi portano ad aumentare il valore del grado medio.
 
-Il grado massimo è 17. Il nodo con questo grado rappresenta la stazione di Stratford che si trova nella zona 3. Questa stazione è anche quella con il maggior numero di gradi in entrata (9 archi in entrata). Potrebbe essere interessante analizzare da dove arrivano questi archi e dove si dirigono i restanti 8 archi in uscita per vedere se si tratta di una sorta di collo di bottiglia che collega zone centrali a zone più periferiche.
-In questo nodo entrano archi da stazioni che appartengono alla stessa zona (zona 3) o a zone più centrali (zona 1 e 2), mentre i nodi tra i nodi uscenti escono due archi verso una zona più periferica (zona 4), 3 archi vanno verso una zona più centrale (zona 2) e i restanti vanno verso stazioni appartenenti alla stessa zona. Quindi non tutti gli archi entrano da zone più centrali ed escono verso zone più periferiche, ma due sicuramente si, ovvero quelli che vanno verso la zona 4.
+Il grado massimo è 17. Il nodo con questo grado rappresenta la stazione di Stratford che si trova nella zona 3. Questa stazione è anche quella con il maggior numero di archi in entrata (9 archi). Potrebbe essere interessante analizzare da dove arrivano questi archi e dove si dirigono i restanti 8 archi in uscita per vedere se si tratta di una sorta di collo di bottiglia che collega zone centrali a zone più periferiche.
+In questo nodo entrano archi da stazioni che appartengono alla stessa zona (zona 3) o a zone più centrali (zona 1 e 2), mentre tra gli archi uscenti escono due archi verso una zona più periferica (zona 4), 3 archi vanno verso una zona più centrale (zona 2) e i restanti vanno verso stazioni appartenenti alla stessa zona. Quindi non tutti gli archi entrano da zone più centrali ed escono verso zone più periferiche, ma due sicuramente si, ovvero quelli che vanno verso la zona 4.
 
 
 ```{r, echo=F}
@@ -299,7 +301,7 @@ plot <- barplot(distribuzione_gradi,
 ```
 
 ## DISTRIBUZIONE DEI GRADI PER ZONA
-Dato che le zone centrali hanno un numero maggiore di stazioni rispetto a quelle periferiche mi aspetto che anche il grado medio in queste zone sia maggiore rispetto alle zone più esterne. Dal primo grafico però sembra esserci un'anomalia per quanto riguarda la zona 8. Ciò può essere dovuto al fatto che in questa zona ci sono solo 4 stazioni e quindi il grado è maggiore in quanto gli archi passanti per questa zona sono suddivisi tra solo questi 4 nodi. Nel secondo grafico, quindi il valore del grado medio viene normalizzato rispetto al numero di stazioni appartenenti alla zona e infatti notiamo che il valore per la zona 8 risulta ora essere tra i più bassi e si le zone centrali si confermano come le più connesse.
+Dato che le zone centrali hanno un numero maggiore di stazioni rispetto a quelle periferiche mi aspetto che anche il grado medio in queste zone sia maggiore rispetto alle zone più esterne. Dal primo grafico però sembra esserci un'anomalia per quanto riguarda la zona 8. Ciò può essere dovuto al fatto che in questa zona ci sono solo 4 stazioni e quindi il grado è maggiore in quanto gli archi passanti per questa zona sono suddivisi tra solo questi 4 nodi. Nel secondo grafico, quindi il valore del grado medio viene normalizzato rispetto al numero di stazioni appartenenti alla zona e infatti notiamo che il valore per la zona 8 risulta ora essere tra i più bassi e le zone centrali si confermano come le più connesse.
 
 ```{r, echo=F}
 
@@ -331,23 +333,4 @@ mapview(dt, xcol = "Longitude", ycol = "Latitude", crs = 4269,
         label = stazioni$Zone, zcol="Zone", seq = stazioni$Zone, cex = "degree")
 
 ```
-
-## RILEVAMENTO DI COMUNITÀ
-```{r, echo=F}
-# c = cluster_leading_eigen(graph)
-# modularity(c)
-# 
-# length(c)
-# 
-# sizes(c)
-# 
-# membership(c)
-# 
-# crossing(c, graph)
-# 
-# plot(c, graph, layout = lo)
-# 
-# plot(graph, vertex.color = membership(c), layout = lo)
-```
-
 
